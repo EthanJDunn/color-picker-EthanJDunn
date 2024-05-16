@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:weightSum="100">
+
+    <Switch
+        android:id="@+id/colorSwitch"
+        android:layout_width="13dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="20"
+        android:checked="false" />
+
+    <TextView
+        android:id="@+id/typeTxt"
+        android:layout_width="10dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        tools:text="R" />
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="216dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="60"
+        android:max="255"
+        android:min="0"
+        android:thumbTint="#000000"
+        android:progressTint="@color/black"
+        android:background="@color/white"
+        android:visibility="invisible"/>
+
+
+    <EditText
+        android:id="@+id/colorValueTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="12"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        tools:text="0" />
+
+
+</LinearLayout>
