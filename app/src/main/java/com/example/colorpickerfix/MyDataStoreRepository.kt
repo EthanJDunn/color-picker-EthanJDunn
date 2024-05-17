@@ -35,18 +35,6 @@ class MyDataStoreRepository private constructor(private val dataStore: DataStore
     val greenSwitch: Flow<String> = dataStore.data.map { prefs ->
         prefs[GREEN_SWITCH_KEY] ?: ""
     }.distinctUntilChanged()
-
-    val redText: Flow<String> = dataStore.data.map { prefs ->
-        prefs[RED_TEXT_KEY] ?: ""
-    }.distinctUntilChanged()
-
-    val blueText: Flow<String> = dataStore.data.map { prefs ->
-        prefs[BLUE_TEXT_KEY] ?: ""
-    }.distinctUntilChanged()
-
-    val greenText: Flow<String> = dataStore.data.map { prefs ->
-        prefs[GREEN_TEXT_KEY] ?: ""
-    }.distinctUntilChanged()
     private suspend fun saveValue(value: String, key: Preferences.Key<String>) {
         dataStore.edit { prefs ->
             prefs[key] = value
@@ -60,9 +48,6 @@ class MyDataStoreRepository private constructor(private val dataStore: DataStore
             4 -> RED_SWITCH_KEY
             5 -> GREEN_SWITCH_KEY
             6 -> BLUE_SWITCH_KEY
-            7 -> RED_TEXT_KEY
-            8 -> BLUE_TEXT_KEY
-            9 -> GREEN_TEXT_KEY
 
             else -> { throw NoSuchFieldException("Invalidd input index: $index")}
         }
@@ -88,11 +73,8 @@ class MyDataStoreRepository private constructor(private val dataStore: DataStore
         private val GREEN_SEEKBAR_KEY = stringPreferencesKey("greenSeekbar")
         private val BLUE_SEEKBAR_KEY = stringPreferencesKey("blueSeekbar")
         private val RED_SWITCH_KEY = stringPreferencesKey("redSwitch")
-        private val GREEN_SWITCH_KEY = stringPreferencesKey("blueSwitch")
-        private val BLUE_SWITCH_KEY = stringPreferencesKey("greenSwitch")
-        private val RED_TEXT_KEY = stringPreferencesKey("redText")
-        private val BLUE_TEXT_KEY = stringPreferencesKey("blueText")
-        private val GREEN_TEXT_KEY = stringPreferencesKey("greenText")
+        private val GREEN_SWITCH_KEY = stringPreferencesKey("greenSwitch")
+        private val BLUE_SWITCH_KEY = stringPreferencesKey("blueSwitch")
 
         private var INSTANCE: MyDataStoreRepository? = null
         fun get(): MyDataStoreRepository {

@@ -6,19 +6,21 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.Switch
 import android.widget.TextView
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
 
 class MainActivity : Activity() {
 
-//    private lateinit var binding: ActivityMainBinding
+    //private lateinit var binding: ActivityMainBinding
 
     //private val myViewModel: MyViewModel by viewModels()
 
@@ -42,31 +44,52 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.colorpickerlayout)
+
+
         connectSeekBars()
         setActions()
         connectViews()
         loadData()
 
+
     }
+//    override fun onSaveInstanceState(outState: Bundle) {
+//        super.onSaveInstanceState(outState)
+//        saveData() // Save the state to the ViewModel
+//    }
+//
+//    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+//        super.onRestoreInstanceState(savedInstanceState)
+//        loadData() // Load the state from the ViewModel
+//    }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
 
         if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT)
         {
-            saveData()
+
             setContentView(R.layout.colorpickerlayout)
+
+            connectViews()
             connectSeekBars()
-            loadData()
             setActions()
+            loadData()
+
+
         }
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
         {
-            saveData()
+
             setContentView(R.layout.landscape_colorpickerlayout)
+
+            connectViews()
             connectSeekBars()
-            loadData()
             setActions()
+            loadData()
+
+
+
         }
 
     }
@@ -101,7 +124,7 @@ class MainActivity : Activity() {
 
             }
             else {
-                redText.text.clear()
+                redText.setText("0")
                 redseekBar.progress = 0
             }
         }
@@ -113,7 +136,7 @@ class MainActivity : Activity() {
 
             }
             else {
-                greenText.text.clear()
+                greenText.setText("0")
                 greenseekBar.progress = 0
             }
         }
@@ -125,7 +148,7 @@ class MainActivity : Activity() {
 
             }
             else {
-                blueText.text.clear()
+                blueText.setText("0")
                 blueseekBar.progress = 0
             }
         }
@@ -191,9 +214,11 @@ class MainActivity : Activity() {
         redSwitch.isChecked = false
         blueSwitch.isChecked = false
         greenSwitch.isChecked = false
-        redText.text.clear()
-        blueText.text.clear()
-        greenText.text.clear()
+        redText.setText("0")
+        blueText.setText("0")
+        greenText.setText("0")
+
+        saveData()
 
 
     }
@@ -204,10 +229,9 @@ class MainActivity : Activity() {
         myViewModel.saveInput(redSwitch.isChecked.toString(), 4)
         myViewModel.saveInput(greenSwitch.isChecked.toString(), 5)
         myViewModel.saveInput(blueSwitch.isChecked.toString(), 6)
-        myViewModel.saveInput(redText.text.toString(), 7)
-        myViewModel.saveInput(blueText.text.toString(), 8)
-        myViewModel.saveInput(greenText.text.toString(), 9)
-
+//        myViewModel.saveInput(redText.text.toString(), 7)
+//        myViewModel.saveInput(blueText.text.toString(), 8)
+//        myViewModel.saveInput(greenText.text.toString(), 9)
     }
 
     private fun connectViews() {
@@ -221,6 +245,8 @@ class MainActivity : Activity() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 // Update the color of the target view based on the SeekBar progress
                 updateViewColor(view, viewId, progress)
+
+
 
 
             }
