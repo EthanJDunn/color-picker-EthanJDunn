@@ -14,68 +14,77 @@ import android.widget.SeekBar
 import android.widget.Switch
 import android.widget.TextView
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import androidx.activity.viewModels
+import androidx.lifecycle.ViewModelStore
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 
 
-class MainActivity : Activity() {
+class MainActivity : AppCompatActivity() {
 
-    //private lateinit var binding: ActivityMainBinding
+//    private lateinit var binding: ActivityMainBinding
 
-    //private val myViewModel: MyViewModel by viewModels()
-
-    private val myViewModel: MyViewModel by lazy {
-        MyDataStoreRepository.initialize(this)
-        MyViewModel()
-    }
+    private lateinit var myViewModel: MyViewModel
+//    private val myViewModel: MyViewModel by lazy {
+//        ViewModelProvider(this).get(MyViewModel::class.java)
+//
+//
+//    }
 
     lateinit var redseekBar: SeekBar
     lateinit var blueseekBar: SeekBar
     lateinit var greenseekBar: SeekBar
-    lateinit var redSwitch: Switch
-    lateinit var greenSwitch: Switch
-    lateinit var blueSwitch: Switch
+    lateinit var redSwitch: SwitchCompat
+    lateinit var greenSwitch: SwitchCompat
+    lateinit var blueSwitch: SwitchCompat
     lateinit var saveBtn: Button
     lateinit var resetBtn: Button
     lateinit var redText: EditText
     lateinit var blueText: EditText
     lateinit var greenText: EditText
 
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.colorpickerlayout)
 
+        MyDataStoreRepository.initialize(this)
+
+        myViewModel = ViewModelProvider(this).get(MyViewModel::class.java)
 
         connectSeekBars()
         setActions()
         connectViews()
         loadData()
+//        Log.d("MainActivity", "BeforeViewModelSave")
+//        viewmodelSave()
+//        Log.d("MainActivity", "AfterViewModelSave")
+//        viewmodelLoad()
 
 
     }
-//    override fun onSaveInstanceState(outState: Bundle) {
-//        super.onSaveInstanceState(outState)
-//        saveData() // Save the state to the ViewModel
-//    }
-//
-//    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-//        super.onRestoreInstanceState(savedInstanceState)
-//        loadData() // Load the state from the ViewModel
-//    }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
+
+        Log.d("MainActivity", "configchange")
 
         if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT)
         {
 
             setContentView(R.layout.colorpickerlayout)
 
+            Log.d("MainActivity", "MyViewModelPortrait")
             connectViews()
             connectSeekBars()
             setActions()
-            loadData()
-
+            viewmodelLoad()
 
         }
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
@@ -83,16 +92,19 @@ class MainActivity : Activity() {
 
             setContentView(R.layout.landscape_colorpickerlayout)
 
+            Log.d("MainActivity", "MyViewModelLandscape")
+
             connectViews()
             connectSeekBars()
             setActions()
-            loadData()
+            viewmodelLoad()
 
 
 
         }
 
     }
+
 
 
 
@@ -115,8 +127,6 @@ class MainActivity : Activity() {
         greenseekBar.setOnSeekBarChangeListener(createSeekBarChangeListener(findViewById(R.id.linearLayout), R.id.colorSeekBar2))
         blueseekBar.setOnSeekBarChangeListener(createSeekBarChangeListener(findViewById(R.id.linearLayout), R.id.colorSeekBar3))
 
-
-
         redSwitch.setOnCheckedChangeListener { _, isChecked ->
             redseekBar.isEnabled = isChecked
             redseekBar.visibility = if (isChecked) View.VISIBLE else View.INVISIBLE
@@ -127,6 +137,7 @@ class MainActivity : Activity() {
                 redText.setText("0")
                 redseekBar.progress = 0
             }
+            viewmodelSave()
         }
 
         greenSwitch.setOnCheckedChangeListener { _, isChecked ->
@@ -139,6 +150,7 @@ class MainActivity : Activity() {
                 greenText.setText("0")
                 greenseekBar.progress = 0
             }
+            viewmodelSave()
         }
 
         blueSwitch.setOnCheckedChangeListener { _, isChecked ->
@@ -146,11 +158,13 @@ class MainActivity : Activity() {
             blueseekBar.visibility = if (isChecked) View.VISIBLE else View.INVISIBLE
             if (blueSwitch.isChecked) {
 
+
             }
             else {
                 blueText.setText("0")
                 blueseekBar.progress = 0
             }
+            viewmodelSave()
         }
 
         redText.addTextChangedListener(object : TextWatcher{
@@ -159,6 +173,7 @@ class MainActivity : Activity() {
                 if (redSwitch.isChecked) {
                     redseekBar.progress = (progress * 100)/255
                 }
+                viewmodelSave()
             }
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
@@ -172,8 +187,10 @@ class MainActivity : Activity() {
             override fun afterTextChanged(s: Editable?) {
                 val progress = s?.toString()?.toIntOrNull() ?: 0
                 if (greenSwitch.isChecked) {
+
                     greenseekBar.progress = (progress * 100)/255
                 }
+                viewmodelSave()
 
             }
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -190,6 +207,7 @@ class MainActivity : Activity() {
                 if (blueSwitch.isChecked) {
                     blueseekBar.progress = (progress * 100)/255
                 }
+                viewmodelSave()
             }
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
@@ -220,7 +238,48 @@ class MainActivity : Activity() {
 
         saveData()
 
+        myViewModel.sendCurrentValues(redseekBar.progress, greenseekBar.progress, blueseekBar.progress, redSwitch.isChecked, greenSwitch.isChecked, blueSwitch.isChecked)
 
+
+    }
+
+//    private fun loadSavedState() {
+//        val savedRed = loadSavedRedValue()
+//        val savedGreen = loadSavedGreenValue()
+//        val savedBlue = loadSavedBlueValue()
+//        val savedRedSwitch = loadSavedRedSwitchValue()
+//        val savedGreenSwitch = loadSavedGreenSwitchValue()
+//        val savedBlueSwitch = loadSavedBlueSwitchValue()
+//
+//    }
+
+    private fun viewmodelSave() {
+        myViewModel.setCurrentValues(
+            redseekBar.progress,
+            greenseekBar.progress,
+            blueseekBar.progress,
+            redSwitch.isChecked,
+            greenSwitch.isChecked,
+            blueSwitch.isChecked
+
+        )
+        Log.d("MainActivity", "viewmodelsave")
+    }
+
+    private fun viewmodelLoad(){
+        redseekBar.progress = myViewModel.currentredProgress
+        greenseekBar.progress = myViewModel.currentgreenProgress
+        blueseekBar.progress = myViewModel.currentblueProgress
+        redSwitch.isChecked = myViewModel.currentredEnabled
+        Log.d("MainActivity", "redswitchloaded")
+        greenSwitch.isChecked = myViewModel.currentgreenEnabled
+        Log.d("MainActivity", "greenswitchloaded")
+        blueSwitch.isChecked = myViewModel.currentblueEnabled
+        Log.d("MainActivity", "blueswitchloaded")
+        redseekBar.isEnabled = myViewModel.currentredEnabled
+        greenseekBar.isEnabled = myViewModel.currentgreenEnabled
+        blueseekBar.isEnabled = myViewModel.currentblueEnabled
+        Log.d("MainActivity", "viewmodelLoad")
     }
     private fun saveData() {
         myViewModel.saveInput(redseekBar.progress.toString(), 1)
@@ -251,13 +310,15 @@ class MainActivity : Activity() {
 
             }
 
+
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
                 // No action needed
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                // No action needed
+                viewmodelSave()
             }
+
         }
     }
 

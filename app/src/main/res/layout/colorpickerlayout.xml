@@ -43,7 +43,7 @@
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <Switch
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/colorSwitch"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
@@ -55,10 +55,11 @@
 
             <SeekBar
                 android:id="@+id/colorSeekBar"
-                app:thumbTint="@color/black"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="90" />
+                android:layout_weight="90"
+                android:saveEnabled="true"
+                app:thumbTint="@color/black" />
 
             <EditText
                 android:id="@+id/editText"
@@ -87,7 +88,7 @@
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <Switch
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/colorSwitch2"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
@@ -99,10 +100,11 @@
 
             <SeekBar
                 android:id="@+id/colorSeekBar2"
-                app:thumbTint="@color/black"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="90" />
+                android:layout_weight="90"
+                android:saveEnabled="true"
+                app:thumbTint="@color/black" />
 
             <EditText
                 android:id="@+id/editText2"
@@ -131,7 +133,7 @@
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <Switch
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/colorSwitch3"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
@@ -143,10 +145,11 @@
 
             <SeekBar
                 android:id="@+id/colorSeekBar3"
-                app:thumbTint="@color/black"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="90" />
+                android:layout_weight="90"
+                android:saveEnabled="true"
+                app:thumbTint="@color/black" />
 
             <EditText
                 android:id="@+id/editText3"
